@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Runway Overseas – Client Receipt System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy2: #1a2e42;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #faf8f3;
+    --cream2: #f2ede0;
+    --slate: #4a5568;
+    --mid: #718096;
+    --border: #d4c9a8;
+    --danger: #c0392b;
+    --success: #1a6640;
+    --white: #ffffff;
+    --shadow: 0 4px 24px rgba(13,27,42,0.12);
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #e8e2d5;
+    min-height: 100vh;
+    color: var(--navy);
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--navy);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-logo {
+    width: 44px;
+    height: 44px;
+    background: var(--gold);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: -1px;
+  }
+  .brand-text h1 {
+    font-family: 'Playfair Display', serif;
+    color: var(--white);
+    font-size: 20px;
+    line-height: 1.1;
+    letter-spacing: 0.4px;
+  }
+  .brand-text p {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .topbar-actions {
+    display: flex;
+    gap: 10px;
+  }
+  .btn {
+    padding: 9px 20px;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+  }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--navy);
+  }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+  .btn-danger { background: var(--danger); color: white; }
+  .btn-danger:hover { background: #a93226; }
+  .btn-success { background: var(--success); color: white; }
+  .btn-success:hover { background: #155534; }
+  .btn-navy { background: var(--navy); color: white; }
+  .btn-sm { padding: 6px 13px; font-size: 12px; }
+
+  /* ── MAIN LAYOUT ── */
+  .main { max-width: 1200px; margin: 0 auto; padding: 28px 20px 60px; }
+
+  /* ── SECTION CARD ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .card-header {
+    background: var(--navy2);
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold);
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .card-title .icon {
+    width: 28px;
+    height: 28px;
+    background: rgba(201,168,76,0.15);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .card-body { padding: 22px; }
+
+  /* ── FORM ELEMENTS ── */
+  .form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--navy);
+    background: var(--cream);
+    transition: all 0.2s;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--gold);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+  }
+  .form-group input[readonly] {
+    background: #f0ebdf;
+    color: var(--slate);
+    cursor: not-allowed;
+  }
+
+  /* ── TRANSACTION TABLE ── */
+  .tx-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .tx-table thead tr { background: var(--navy); }
+  .tx-table thead th {
+    color: var(--gold-light);
+    padding: 10px 12px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .tx-table tbody tr:nth-child(even) { background: var(--cream); }
+  .tx-table tbody tr:hover { background: #f0ebdf; }
+  .tx-table tbody td { padding: 9px 12px; vertical-align: middle; border-bottom: 1px solid #e8e0cc; }
+  .tx-table tbody td input, .tx-table tbody td select {
+    width: 100%;
+    padding: 6px 9px;
+    border: 1.5px solid #d9d0bb;
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    background: white;
+    outline: none;
+    transition: border 0.15s;
+  }
+  .tx-table tbody td input:focus, .tx-table tbody td select:focus { border-color: var(--gold); }
+  .tx-table tfoot td {
+    padding: 11px 12px;
+    background: var(--navy);
+    color: var(--gold-light);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .tx-table .del-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #c0392b;
+    font-size: 16px;
+    padding: 4px;
+    line-height: 1;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+  .tx-table .del-btn:hover { background: #fde8e8; }
+  .add-row-btn {
+    margin-top: 10px;
+    background: none;
+    border: 1.5px dashed var(--gold);
+    color: var(--gold);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .add-row-btn:hover { background: rgba(201,168,76,0.08); }
+
+  /* ── BALANCE SUMMARY ── */
+  .balance-box {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    color: white;
+    box-shadow: var(--shadow);
+  }
+  .balance-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    align-items: center;
+  }
+  .balance-item { text-align: center; }
+  .balance-item label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 6px;
+  }
+  .balance-item .amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--gold-light);
+  }
+  .balance-item .operator {
+    font-size: 26px;
+    color: rgba(255,255,255,0.35);
+    padding-top: 4px;
+  }
+  .balance-item.result .amount {
+    font-size: 28px;
+    color: white;
+  }
+  .balance-msg {
+    margin-top: 18px;
+    padding: 14px 18px;
+    border-radius: 7px;
+    font-family: 'EB Garamond', serif;
+    font-size: 17px;
+    line-height: 1.6;
+    text-align: center;
+  }
+  .balance-msg.positive { background: rgba(26,102,64,0.35); border: 1px solid rgba(26,200,100,0.2); }
+  .balance-msg.negative { background: rgba(192,57,43,0.3); border: 1px solid rgba(220,80,60,0.25); }
+  .amount-words {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    font-style: italic;
+  }
+
+  /* ── CLIENT PANEL ── */
+  .client-bar {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+  .client-bar .form-group { flex: 1; min-width: 200px; }
+  .receipt-meta { display: flex; gap: 16px; }
+  .meta-badge {
+    background: var(--cream2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-size: 12px;
+    color: var(--slate);
+  }
+  .meta-badge strong { color: var(--navy); display: block; font-size: 14px; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 18px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0;
+  }
+  .tab {
+    padding: 9px 20px;
+    background: none;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--mid);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    border-radius: 6px 6px 0 0;
+  }
+  .tab.active { color: var(--navy); border-bottom-color: var(--gold); background: var(--cream); }
+  .tab:hover:not(.active) { color: var(--navy2); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── ALERT / TOAST ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--navy);
+    color: white;
+    padding: 13px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 9999;
+    border-left: 4px solid var(--gold);
+    max-width: 320px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* ══════════════════════════════════════
+     PRINT / RECEIPT STYLES
+  ══════════════════════════════════════ */
+  #receiptModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,18,28,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 500;
+    overflow-y: auto;
+    padding: 30px 16px;
+  }
+  #receiptModal.open { display: flex; align-items: flex-start; justify-content: center; }
+  .receipt-wrapper {
+    background: white;
+    width: 100%;
+    max-width: 820px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .receipt-actions {
+    background: var(--navy);
+    padding: 12px 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+
+  /* Receipt Document */
+  .receipt-doc {
+    padding: 0;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .receipt-letterhead {
+    background: var(--navy);
+    padding: 20px 28px 16px;
+    color: white;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .lh-left {}
+  .lh-company {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+    line-height: 1;
+  }
+  .lh-tagline {
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+  .lh-address {
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+  }
+  .lh-right { text-align: right; }
+  .lh-receipt-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 5px;
+  }
+  .lh-receipt-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: white;
+  }
+  .lh-date { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 6px; }
+
+  .receipt-client-bar {
+    background: var(--cream2);
+    border-bottom: 2px solid var(--gold);
+    padding: 12px 28px;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+  }
+  .rcb-item label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--mid);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .rcb-item span {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  .receipt-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 2px solid var(--navy);
+  }
+  .receipt-col { padding: 18px 20px; }
+  .receipt-col:first-child { border-right: 2px solid var(--navy); }
+  .receipt-col-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--navy);
+    border-bottom: 1px solid var(--gold);
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .receipt-col-title::before {
+    content: '';
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  .r-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .r-table thead tr { background: var(--navy2); }
+  .r-table thead th {
+    color: var(--gold-light);
+    padding: 7px 9px;
+    text-align: left;
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .r-table tbody tr:nth-child(even) { background: var(--cream); }
+  .r-table tbody td { padding: 7px 9px; border-bottom: 1px solid #e8e0cc; color: var(--navy); }
+  .r-table tfoot td {
+    padding: 8px 9px;
+    background: var(--navy);
+    color: var(--gold-light);
+    font-weight: 600;
+    font-size: 12px;
+  }
+  .r-table .amount-cell { text-align: right; font-weight: 500; }
+  .last-balance-row td {
+    background: #fff8e6 !important;
+    font-weight: 600;
+    color: var(--navy) !important;
+    border-bottom: 1px dashed var(--gold) !important;
+  }
+
+  .receipt-calc {
+    padding: 16px 28px;
+    background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+    color: white;
+  }
+  .calc-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .calc-item { text-align: center; padding: 0 16px; }
+  .calc-item label {
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: rgba(255,255,255,0.5);
+    display: block;
+    margin-bottom: 3px;
+  }
+  .calc-item .val {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--gold-light);
+  }
+  .calc-sep { font-size: 20px; color: rgba(255,255,255,0.3); padding: 0 4px; line-height: 1; margin-top: 14px; }
+  .calc-result .val { font-size: 24px; color: white; }
+  .calc-result label { color: rgba(255,255,255,0.7); }
+  .calc-words { text-align: center; font-size: 11px; color: rgba(255,255,255,0.45); font-style: italic; margin-bottom: 10px; }
+  .calc-msg {
+    text-align: center;
+    font-family: 'EB Garamond', serif;
+    font-size: 16px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    line-height: 1.6;
+  }
+  .calc-msg.positive { background: rgba(26,102,64,0.4); }
+  .calc-msg.negative { background: rgba(192,57,43,0.35); }
+
+  .receipt-sigs {
+    padding: 18px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    background: var(--cream);
+    border-top: 2px solid var(--navy);
+  }
+  .sig-block { text-align: center; }
+  .sig-line {
+    border-bottom: 1.5px solid var(--navy);
+    height: 44px;
+    margin-bottom: 8px;
+  }
+  .sig-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--slate);
+  }
+  .receipt-footer {
+    background: var(--navy);
+    padding: 10px 28px;
+    text-align: center;
+    font-size: 11px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.5px;
+  }
+
+  /* ── CLIENT MODAL ── */
+  #clientModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,18,28,0.65);
+    backdrop-filter: blur(3px);
+    z-index: 600;
+    align-items: center;
+    justify-content: center;
+  }
+  #clientModal.open { display: flex; }
+  .client-modal-box {
+    background: white;
+    border-radius: 12px;
+    padding: 28px;
+    width: 440px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  }
+  .client-modal-box h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--navy);
+    margin-bottom: 18px;
+    font-size: 20px;
+  }
+  .client-list { max-height: 250px; overflow-y: auto; margin-bottom: 16px; }
+  .client-item {
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 7px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .client-item:hover { border-color: var(--gold); background: var(--cream); }
+  .client-item .c-name { font-weight: 600; font-size: 14px; color: var(--navy); }
+  .client-item .c-balance { font-size: 12px; color: var(--mid); }
+  .client-item .c-phone { font-size: 12px; color: var(--slate); }
+  .client-item.selected { border-color: var(--gold); background: #fff8e6; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .topbar { padding: 12px 16px; }
+    .brand-text h1 { font-size: 16px; }
+    .main { padding: 16px 10px 50px; }
+    .balance-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .receipt-columns { grid-template-columns: 1fr; }
+    .receipt-col:first-child { border-right: none; border-bottom: 2px solid var(--navy); }
+    .receipt-client-bar { flex-wrap: wrap; gap: 14px; }
+    .calc-grid { gap: 0; }
+    .receipt-sigs { grid-template-columns: 1fr; gap: 18px; }
+    .topbar-actions .btn span { display: none; }
+  }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    @page { margin: 0.4cm; size: A4; }
+
+    /* Hide everything on the page */
+    body > *:not(#receiptModal) { display: none !important; }
+    .topbar { display: none !important; }
+    .main   { display: none !important; }
+    .toast  { display: none !important; }
+    #clientModal { display: none !important; }
+
+    /* Show the receipt modal as a normal block */
+    #receiptModal {
+      display: block !important;
+      position: static !important;
+      background: none !important;
+      backdrop-filter: none !important;
+      padding: 0 !important;
+      overflow: visible !important;
+      width: 100% !important;
+    }
+    .receipt-wrapper {
+      box-shadow: none !important;
+      border-radius: 0 !important;
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+    .receipt-actions { display: none !important; }
+
+    /* Force colour backgrounds to print */
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+    .receipt-columns { page-break-inside: avoid; }
+  }
+
+  /* Animations */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .card { animation: fadeIn 0.35s ease both; }
+  .card:nth-child(2) { animation-delay: 0.07s; }
+  .card:nth-child(3) { animation-delay: 0.14s; }
+  .balance-box { animation: fadeIn 0.35s ease 0.21s both; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="brand-logo">RO</div>
+    <div class="brand-text">
+      <h1>Runway Overseas</h1>
+      <p>Client Receipt System</p>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-outline" onclick="openClientManager()">👥 <span>Manage Clients</span></button>
+    <button class="btn btn-gold" onclick="generateReceipt()">🧾 <span>Generate Receipt</span></button>
+    <button class="btn btn-outline btn-sm" onclick="resetForm()" style="color:#f8a0a0;border-color:#f8a0a0">↺ <span>Reset</span></button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- CLIENT & META INFO -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="icon">👤</div>Client Information</div>
+      <div class="receipt-meta">
+        <div class="meta-badge">Receipt No. <strong id="receiptNoDisplay">—</strong></div>
+        <div class="meta-badge">Date <strong id="dateDisplay">—</strong></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="client-bar">
+        <div class="form-group" style="min-width:240px">
+          <label>Client Name</label>
+          <select id="clientSelect" onchange="onClientChange()">
+            <option value="">— Select Client —</option>
+          </select>
+        </div>
+        <div class="form-group" style="max-width:160px">
+          <label>Phone</label>
+          <input type="text" id="clientPhone" readonly placeholder="Auto-filled">
+        </div>
+        <div class="form-group" style="max-width:160px">
+          <label>Last Balance (৳)</label>
+          <input type="number" id="lastBalance" value="0" oninput="recalc()">
+        </div>
+        <button class="btn btn-gold" style="margin-bottom:0; align-self:flex-end" onclick="openClientManager()">+ New Client</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSACTIONS TABS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><div class="icon">💳</div>Transactions</div>
+    </div>
+    <div class="card-body">
+      <div class="tab-bar">
+        <button class="tab active" onclick="switchTab('deposits',this)">⬆ Deposits / Received</button>
+        <button class="tab" onclick="switchTab('expenses',this)">⬇ Expenses / Deductions</button>
+      </div>
+
+      <!-- DEPOSITS TAB -->
+      <div class="tab-content active" id="tab-deposits">
+        <table class="tx-table" id="depositTable">
+          <thead>
+            <tr>
+              <th style="width:130px">Date</th>
+              <th style="width:130px">Method</th>
+              <th>Description</th>
+              <th style="width:130px">Amount (৳)</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody id="depositBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align:right; letter-spacing:0.5px">Total Received →</td>
+              <td id="totalDeposit">৳ 0.00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+        <button class="add-row-btn" onclick="addDepositRow()">＋ Add Deposit Row</button>
+      </div>
+
+      <!-- EXPENSES TAB -->
+      <div class="tab-content" id="tab-expenses">
+        <table class="tx-table" id="expenseTable">
+          <thead>
+            <tr>
+              <th style="width:130px">Date</th>
+              <th style="width:160px">Purpose</th>
+              <th>Person</th>
+              <th style="width:130px">Amount (৳)</th>
+              <th style="width:40px"></th>
+            </tr>
+          </thead>
+          <tbody id="expenseBody"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align:right; letter-spacing:0.5px">Total Expense →</td>
+              <td id="totalExpense">৳ 0.00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+        <button class="add-row-btn" onclick="addExpenseRow()">＋ Add Expense Row</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BALANCE SUMMARY -->
+  <div class="balance-box">
+    <div class="balance-grid">
+      <div class="balance-item">
+        <label>Last Balance</label>
+        <div class="amount" id="sumLast">৳ 0</div>
+      </div>
+      <div class="balance-item">
+        <div class="operator">+</div>
+      </div>
+      <div class="balance-item">
+        <label>Total Received</label>
+        <div class="amount" id="sumReceived">৳ 0</div>
+      </div>
+      <div class="balance-item">
+        <div class="operator">−</div>
+      </div>
+      <div class="balance-item">
+        <label>Total Expense</label>
+        <div class="amount" id="sumExpense">৳ 0</div>
+      </div>
+      <div class="balance-item">
+        <div class="operator">=</div>
+      </div>
+      <div class="balance-item result" style="grid-column: span 1">
+        <label>Current Balance</label>
+        <div class="amount" id="sumBalance">৳ 0</div>
+      </div>
+    </div>
+    <div id="balanceMsg" class="balance-msg positive" style="display:none"></div>
+    <div class="amount-words" id="balanceWords"></div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ══════════════════════════════════
+     RECEIPT MODAL
+══════════════════════════════════ -->
+<div id="receiptModal">
+  <div class="receipt-wrapper">
+    <div class="receipt-actions">
+      <button class="btn btn-outline btn-sm" onclick="closeReceipt()">✕ Close</button>
+      <button class="btn btn-gold btn-sm" onclick="printReceipt()">🖨 Print Receipt</button>
+      <button class="btn btn-success btn-sm" onclick="downloadPDF()">⬇ Download PDF</button>
+    </div>
+
+    <div class="receipt-doc" id="receiptDoc">
+      <!-- LETTERHEAD -->
+      <div class="receipt-letterhead">
+        <div class="lh-left">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:48px;height:48px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:22px;color:var(--navy);font-weight:700">RO</div>
+            <div>
+              <div class="lh-company">Runway Overseas</div>
+              <div class="lh-tagline">Overseas Recruitment Office</div>
+            </div>
+          </div>
+          <div class="lh-address">
+            13/P, Shatabdhi Center, Fakirapool, Motijheel, Dhaka<br>
+            📞 01840421278 &nbsp;|&nbsp; 01700-08886
+          </div>
+        </div>
+        <div class="lh-right">
+          <div class="lh-receipt-label">Receipt No.</div>
+          <div class="lh-receipt-num" id="r-receiptNo">—</div>
+          <div class="lh-date" id="r-date">—</div>
+        </div>
+      </div>
+
+      <!-- CLIENT BAR -->
+      <div class="receipt-client-bar">
+        <div class="rcb-item">
+          <label>Client Name</label>
+          <span id="r-clientName">—</span>
+        </div>
+        <div class="rcb-item">
+          <label>Phone</label>
+          <span id="r-clientPhone">—</span>
+        </div>
+        <div class="rcb-item">
+          <label>Last Balance</label>
+          <span id="r-lastBalance">—</span>
+        </div>
+      </div>
+
+      <!-- TWO COLUMNS -->
+      <div class="receipt-columns">
+        <!-- LEFT: DEPOSITS -->
+        <div class="receipt-col">
+          <div class="receipt-col-title">Deposit / Received</div>
+          <table class="r-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Method</th>
+                <th>Description</th>
+                <th style="text-align:right">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="r-depositRows"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">Total Received</td>
+                <td class="amount-cell" id="r-totalDeposit">৳ 0.00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- RIGHT: EXPENSES -->
+        <div class="receipt-col">
+          <div class="receipt-col-title">Expenses / Deductions</div>
+          <table class="r-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Purpose</th>
+                <th>Person</th>
+                <th style="text-align:right">Amount</th>
+              </tr>
+            </thead>
+            <tbody id="r-expenseRows"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">Total Expense</td>
+                <td class="amount-cell" id="r-totalExpense">৳ 0.00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- CALCULATION -->
+      <div class="receipt-calc">
+        <div class="calc-grid">
+          <div class="calc-item">
+            <label>Last Balance</label>
+            <div class="val" id="rc-last">৳ 0</div>
+          </div>
+          <div class="calc-sep">+</div>
+          <div class="calc-item">
+            <label>Total Received</label>
+            <div class="val" id="rc-received">৳ 0</div>
+          </div>
+          <div class="calc-sep">−</div>
+          <div class="calc-item">
+            <label>Total Expense</label>
+            <div class="val" id="rc-expense">৳ 0</div>
+          </div>
+          <div class="calc-sep">=</div>
+          <div class="calc-item calc-result">
+            <label>Current Balance</label>
+            <div class="val" id="rc-balance">৳ 0</div>
+          </div>
+        </div>
+        <div class="calc-words" id="rc-words"></div>
+        <div class="calc-msg positive" id="rc-msg"></div>
+      </div>
+
+      <!-- SIGNATURES -->
+      <div class="receipt-sigs">
+        <div class="sig-block">
+          <div class="sig-line"></div>
+          <div class="sig-label">Client Signature</div>
+        </div>
+        <div class="sig-block">
+          <div class="sig-line"></div>
+          <div class="sig-label">Authorized Signature</div>
+        </div>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="receipt-footer">
+        This is a computer-generated receipt. Valid without physical signature for office records. &nbsp;|&nbsp; Runway Overseas © 2025
+      </div>
+    </div><!-- /receiptDoc -->
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     CLIENT MANAGER MODAL
+══════════════════════════════════ -->
+<div id="clientModal">
+  <div class="client-modal-box">
+    <h3>👥 Client Manager</h3>
+    <div class="form-row" style="margin-bottom:14px">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="newClientName" placeholder="Client name">
+      </div>
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="text" id="newClientPhone" placeholder="01XXXXXXXXX">
+      </div>
+    </div>
+    <button class="btn btn-gold" style="width:100%;justify-content:center;margin-bottom:18px" onclick="saveClient()">➕ Add Client</button>
+    <div class="client-list" id="clientList"></div>
+    <button class="btn btn-outline btn-navy" style="width:100%;justify-content:center;border-color:#ccc;color:#444" onclick="closeClientManager()">✕ Close</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let clients = JSON.parse(localStorage.getItem('ro_clients') || '[]');
+let receiptCounter = parseInt(localStorage.getItem('ro_counter') || '1000');
+let depositRows = [];
+let expenseRows = [];
+
+const DEPOSIT_METHODS = ['Cash', 'Bank Transfer', 'bKash', 'Nagad', 'Other'];
+const EXPENSE_PURPOSES = ['Visa Fee', 'MOFA', 'Medical', 'Ticket', 'Embassy Fee', 'Service Charge', 'Other'];
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+function init() {
+  const now = new Date();
+  document.getElementById('receiptNoDisplay').textContent = 'RO-' + (receiptCounter);
+  document.getElementById('dateDisplay').textContent = formatDate(now);
+  rebuildClientSelect();
+  addDepositRow();
+  addExpenseRow();
+  recalc();
+}
+
+function formatDate(d) {
+  return d.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+}
+function todayValue() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ─── CLIENT ───────────────────────────────────────────────────────────────────
+function rebuildClientSelect() {
+  const sel = document.getElementById('clientSelect');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— Select Client —</option>';
+  clients.forEach((c, i) => {
+    const opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = c.name + (c.phone ? ' – ' + c.phone : '');
+    sel.appendChild(opt);
+  });
+  if (cur !== '') sel.value = cur;
+}
+
+function onClientChange() {
+  const idx = document.getElementById('clientSelect').value;
+  if (idx === '') {
+    document.getElementById('clientPhone').value = '';
+    document.getElementById('lastBalance').value = 0;
+    recalc(); return;
+  }
+  const c = clients[idx];
+  document.getElementById('clientPhone').value = c.phone || '';
+  document.getElementById('lastBalance').value = c.lastBalance || 0;
+  recalc();
+}
+
+function openClientManager() {
+  renderClientList();
+  document.getElementById('clientModal').classList.add('open');
+}
+function closeClientManager() {
+  document.getElementById('clientModal').classList.remove('open');
+}
+function renderClientList() {
+  const el = document.getElementById('clientList');
+  if (!clients.length) { el.innerHTML = '<p style="color:#aaa;font-size:13px;text-align:center;padding:12px">No clients added yet.</p>'; return; }
+  el.innerHTML = clients.map((c,i) => `
+    <div class="client-item" onclick="selectClientFromManager(${i})">
+      <div>
+        <div class="c-name">${c.name}</div>
+        <div class="c-phone">${c.phone || '—'}</div>
+      </div>
+      <div>
+        <div class="c-balance">Balance: ৳${(c.lastBalance||0).toLocaleString()}</div>
+        <button class="btn btn-sm btn-danger" style="margin-top:4px;font-size:11px" onclick="deleteClient(event,${i})">Delete</button>
+      </div>
+    </div>`).join('');
+}
+function selectClientFromManager(i) {
+  document.getElementById('clientSelect').value = i;
+  onClientChange();
+  closeClientManager();
+  showToast('Client selected: ' + clients[i].name);
+}
+function saveClient() {
+  const name = document.getElementById('newClientName').value.trim();
+  const phone = document.getElementById('newClientPhone').value.trim();
+  if (!name) { showToast('Please enter a client name.'); return; }
+  clients.push({ name, phone, lastBalance: 0 });
+  localStorage.setItem('ro_clients', JSON.stringify(clients));
+  rebuildClientSelect();
+  renderClientList();
+  document.getElementById('newClientName').value = '';
+  document.getElementById('newClientPhone').value = '';
+  showToast('Client added: ' + name);
+}
+function deleteClient(e, i) {
+  e.stopPropagation();
+  if (!confirm('Delete this client?')) return;
+  clients.splice(i,1);
+  localStorage.setItem('ro_clients', JSON.stringify(clients));
+  rebuildClientSelect();
+  renderClientList();
+  showToast('Client deleted.');
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── DEPOSIT ROWS ─────────────────────────────────────────────────────────────
+function addDepositRow() {
+  const id = Date.now() + Math.random();
+  depositRows.push({ id });
+  renderDepositRows();
+}
+function removeDepositRow(id) {
+  depositRows = depositRows.filter(r => r.id !== id);
+  renderDepositRows();
+  recalc();
+}
+function renderDepositRows() {
+  const tbody = document.getElementById('depositBody');
+  tbody.innerHTML = depositRows.map(r => `
+    <tr data-id="${r.id}">
+      <td><input type="date" class="d-date" value="${todayValue()}" oninput="recalc()"></td>
+      <td><select class="d-method" oninput="recalc()">
+        ${DEPOSIT_METHODS.map(m => `<option>${m}</option>`).join('')}
+      </select></td>
+      <td><input type="text" class="d-desc" placeholder="Description…" oninput="recalc()"></td>
+      <td><input type="number" class="d-amt" min="0" placeholder="0" oninput="recalc()"></td>
+      <td><button class="del-btn" onclick="removeDepositRow(${r.id})">✕</button></td>
+    </tr>`).join('');
+  recalc();
+}
+
+// ─── EXPENSE ROWS ─────────────────────────────────────────────────────────────
+function addExpenseRow() {
+  const id = Date.now() + Math.random();
+  expenseRows.push({ id });
+  renderExpenseRows();
+}
+function removeExpenseRow(id) {
+  expenseRows = expenseRows.filter(r => r.id !== id);
+  renderExpenseRows();
+  recalc();
+}
+function renderExpenseRows() {
+  const tbody = document.getElementById('expenseBody');
+  tbody.innerHTML = expenseRows.map(r => `
+    <tr data-id="${r.id}">
+      <td><input type="date" class="e-date" value="${todayValue()}" oninput="recalc()"></td>
+      <td><select class="e-purpose" oninput="recalc()">
+        ${EXPENSE_PURPOSES.map(p => `<option>${p}</option>`).join('')}
+      </select></td>
+      <td><input type="text" class="e-person" placeholder="Passport holder / purpose…" oninput="recalc()"></td>
+      <td><input type="number" class="e-amt" min="0" placeholder="0" oninput="recalc()"></td>
+      <td><button class="del-btn" onclick="removeExpenseRow(${r.id})">✕</button></td>
+    </tr>`).join('');
+  recalc();
+}
+
+// ─── RECALCULATE ──────────────────────────────────────────────────────────────
+function recalc() {
+  const last = parseFloat(document.getElementById('lastBalance').value) || 0;
+  let totalDep = 0, totalExp = 0;
+  document.querySelectorAll('#depositBody .d-amt').forEach(i => totalDep += parseFloat(i.value) || 0);
+  document.querySelectorAll('#expenseBody .e-amt').forEach(i => totalExp += parseFloat(i.value) || 0);
+  const balance = last + totalDep - totalExp;
+
+  document.getElementById('totalDeposit').textContent = '৳ ' + fmt(totalDep);
+  document.getElementById('totalExpense').textContent = '৳ ' + fmt(totalExp);
+
+  document.getElementById('sumLast').textContent = '৳ ' + totalDep.toLocaleString();
+  document.getElementById('sumReceived').textContent = '৳ ' + totalDep.toLocaleString();
+  document.getElementById('sumExpense').textContent = '৳ ' + totalExp.toLocaleString();
+  document.getElementById('sumBalance').textContent = '৳ ' + balance.toLocaleString();
+
+  const msgEl = document.getElementById('balanceMsg');
+  const wordsEl = document.getElementById('balanceWords');
+  if (balance !== 0) {
+    msgEl.style.display = 'block';
+    const abs = Math.abs(balance);
+    if (balance < 0) {
+      msgEl.className = 'balance-msg negative';
+      msgEl.textContent = 'অফিস কর্তৃক আমার নিকট থেকে ' + abs.toLocaleString('bn-BD') + ' টাকা পাওনা রয়েছে।';
+    } else {
+      msgEl.className = 'balance-msg positive';
+      msgEl.textContent = 'অফিসে আমার নামে ' + abs.toLocaleString('bn-BD') + ' টাকা জমা রয়েছে।';
+    }
+    wordsEl.textContent = 'In words: ' + amountToWords(Math.abs(balance)) + ' Taka Only';
+  } else {
+    msgEl.style.display = 'none';
+    wordsEl.textContent = '';
+  }
+}
+
+function fmt(n) { return n.toLocaleString('en-IN', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+
+// ─── AMOUNT TO WORDS ──────────────────────────────────────────────────────────
+function amountToWords(n) {
+  n = Math.round(n);
+  if (n === 0) return 'Zero';
+  const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine',
+    'Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+  const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+  function convert(num) {
+    if (num < 20) return ones[num];
+    if (num < 100) return tens[Math.floor(num/10)] + (num%10 ? ' ' + ones[num%10] : '');
+    if (num < 1000) return ones[Math.floor(num/100)] + ' Hundred' + (num%100 ? ' ' + convert(num%100) : '');
+    if (num < 100000) return convert(Math.floor(num/1000)) + ' Thousand' + (num%1000 ? ' ' + convert(num%1000) : '');
+    if (num < 10000000) return convert(Math.floor(num/100000)) + ' Lakh' + (num%100000 ? ' ' + convert(num%100000) : '');
+    return convert(Math.floor(num/10000000)) + ' Crore' + (num%10000000 ? ' ' + convert(num%10000000) : '');
+  }
+  return convert(n);
+}
+
+// ─── GENERATE RECEIPT ─────────────────────────────────────────────────────────
+function generateReceipt() {
+  receiptCounter++;
+  localStorage.setItem('ro_counter', receiptCounter);
+
+  const now = new Date();
+  const clientIdx = document.getElementById('clientSelect').value;
+  const clientName = clientIdx !== '' ? clients[clientIdx].name : '—';
+  const clientPhone = document.getElementById('clientPhone').value || '—';
+  const last = parseFloat(document.getElementById('lastBalance').value) || 0;
+
+  let totalDep = 0, totalExp = 0;
+  const dRows = [], eRows = [];
+
+  document.querySelectorAll('#depositBody tr').forEach(tr => {
+    const date = tr.querySelector('.d-date')?.value || '';
+    const method = tr.querySelector('.d-method')?.value || '';
+    const desc = tr.querySelector('.d-desc')?.value || '';
+    const amt = parseFloat(tr.querySelector('.d-amt')?.value) || 0;
+    if (amt > 0 || desc) {
+      dRows.push({ date, method, desc, amt });
+      totalDep += amt;
+    }
+  });
+
+  document.querySelectorAll('#expenseBody tr').forEach(tr => {
+    const date = tr.querySelector('.e-date')?.value || '';
+    const purpose = tr.querySelector('.e-purpose')?.value || '';
+    const person = tr.querySelector('.e-person')?.value || '';
+    const amt = parseFloat(tr.querySelector('.e-amt')?.value) || 0;
+    if (amt > 0 || person) {
+      eRows.push({ date, purpose, person, amt });
+      totalExp += amt;
+    }
+  });
+
+  const balance = last + totalDep - totalExp;
+  const absBalance = Math.abs(balance);
+  const rNo = 'RO-' + receiptCounter;
+
+  // Fill receipt fields
+  document.getElementById('r-receiptNo').textContent = rNo;
+  document.getElementById('r-date').textContent = formatDate(now);
+  document.getElementById('r-clientName').textContent = clientName;
+  document.getElementById('r-clientPhone').textContent = clientPhone;
+  document.getElementById('r-lastBalance').textContent = '৳ ' + last.toLocaleString();
+  document.getElementById('receiptNoDisplay').textContent = rNo;
+
+  // Deposit rows
+  const dBody = document.getElementById('r-depositRows');
+  if (dRows.length) {
+    dBody.innerHTML = dRows.map(r => `
+      <tr>
+        <td>${r.date}</td>
+        <td>${r.method}</td>
+        <td>${r.desc || '—'}</td>
+        <td class="amount-cell">৳ ${fmt(r.amt)}</td>
+      </tr>`).join('');
+  } else {
+    dBody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#aaa;font-size:12px;padding:14px">No deposit entries</td></tr>`;
+  }
+  document.getElementById('r-totalDeposit').textContent = '৳ ' + fmt(totalDep);
+
+  // Expense rows
+  const eBody = document.getElementById('r-expenseRows');
+  if (eRows.length) {
+    eBody.innerHTML = eRows.map(r => `
+      <tr>
+        <td>${r.date}</td>
+        <td>${r.purpose}</td>
+        <td>${r.person || '—'}</td>
+        <td class="amount-cell">৳ ${fmt(r.amt)}</td>
+      </tr>`).join('');
+  } else {
+    eBody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:#aaa;font-size:12px;padding:14px">No expense entries</td></tr>`;
+  }
+  document.getElementById('r-totalExpense').textContent = '৳ ' + fmt(totalExp);
+
+  // Calculation
+  document.getElementById('rc-last').textContent = '৳ ' + last.toLocaleString();
+  document.getElementById('rc-received').textContent = '৳ ' + fmt(totalDep);
+  document.getElementById('rc-expense').textContent = '৳ ' + fmt(totalExp);
+  document.getElementById('rc-balance').textContent = '৳ ' + balance.toLocaleString();
+  document.getElementById('rc-words').textContent = 'In words: ' + amountToWords(absBalance) + ' Taka Only';
+
+  const msgEl = document.getElementById('rc-msg');
+  if (balance < 0) {
+    msgEl.className = 'calc-msg negative';
+    msgEl.textContent = 'অফিস কর্তৃক আমার নিকট থেকে ' + absBalance.toLocaleString('bn-BD') + ' টাকা পাওনা রয়েছে।';
+  } else {
+    msgEl.className = 'calc-msg positive';
+    msgEl.textContent = 'অফিসে আমার নামে ' + absBalance.toLocaleString('bn-BD') + ' টাকা জমা রয়েছে।';
+  }
+
+  // Update last balance for client
+  if (clientIdx !== '') {
+    clients[clientIdx].lastBalance = balance;
+    localStorage.setItem('ro_clients', JSON.stringify(clients));
+  }
+
+  document.getElementById('receiptModal').classList.add('open');
+}
+
+function closeReceipt() {
+  document.getElementById('receiptModal').classList.remove('open');
+}
+
+function printReceipt() {
+  window.print();
+}
+
+function downloadPDF() {
+  showToast('Use your browser\'s "Save as PDF" option in the print dialog.');
+  setTimeout(() => window.print(), 600);
+}
+
+// ─── RESET ────────────────────────────────────────────────────────────────────
+function resetForm() {
+  if (!confirm('Reset all form data?')) return;
+  document.getElementById('clientSelect').value = '';
+  document.getElementById('clientPhone').value = '';
+  document.getElementById('lastBalance').value = 0;
+  depositRows = [];
+  expenseRows = [];
+  renderDepositRows();
+  renderExpenseRows();
+  addDepositRow();
+  addExpenseRow();
+  recalc();
+  showToast('Form has been reset.');
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ─── BOOT ─────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
